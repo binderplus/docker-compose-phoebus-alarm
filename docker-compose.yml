@@ -25,3 +25,9 @@ services:
               AcceleratorTalk:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
+    phoebus-alarm-server:
+        image: "pklaus/phoebus-alarm-server:4.6.3"
+        command: "-noshell -server localhost:9092"
+        network_mode: "host"
+        depends_on: 
+            - "kafka"
