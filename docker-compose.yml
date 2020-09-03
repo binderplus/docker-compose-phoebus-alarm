@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+    zookeeper:
+        image: "wurstmeister/zookeeper:3.4.6"
+        ports:
+            - "2181:2181"
+        restart: "unless-stopped"
+    kafka:
+        image: "wurstmeister/kafka:2.12-2.5.0"
+        ports:
+            - "9092:9092"
+        restart: "unless-stopped"
+        depends_on:
+            - "zookeeper"
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: "localhost"
+            KAFKA_LISTENERS: "PLAINTEXT://localhost:9092"
+            KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+            KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+            KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+            KAFKA_CREATE_TOPICS_SEPARATOR: "$$'\n'"
+            KAFKA_CREATE_TOPICS: |-
+              Accelerator:1:1:compact --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000
+              AcceleratorCommand:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000
+              AcceleratorTalk:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
