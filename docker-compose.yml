@@ -2,21 +2,18 @@ version: "3.7"
 services:
     zookeeper:
         image: "wurstmeister/zookeeper:3.4.6"
-        ports:
-            - "2181:2181"
+        network_mode: "host"
         restart: "unless-stopped"
     kafka:
         image: "wurstmeister/kafka:2.12-2.5.0"
-        ports:
-            - "9092:9092"
+        network_mode: "host"
         restart: "unless-stopped"
         depends_on:
             - "zookeeper"
         environment:
-            KAFKA_ADVERTISED_HOST_NAME: "localhost"
-            KAFKA_LISTENERS: "PLAINTEXT://localhost:9092"
-            KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
-            KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+            KAFKA_LISTENERS: "PLAINTEXT://:9092"
+            KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://192.168.2.100:9092"
+            KAFKA_ZOOKEEPER_CONNECT: "localhost:2181"
             KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
             KAFKA_CREATE_TOPICS_SEPARATOR: "$$'\n'"
             KAFKA_CREATE_TOPICS: |-
