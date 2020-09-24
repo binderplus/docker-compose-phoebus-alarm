@@ -15,11 +15,10 @@ services:
             KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://192.168.2.100:9092"
             KAFKA_ZOOKEEPER_CONNECT: "localhost:2181"
             KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-            KAFKA_CREATE_TOPICS_SEPARATOR: "$$'\n'"
-            KAFKA_CREATE_TOPICS: |-
-              Accelerator:1:1:compact --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000
-              AcceleratorCommand:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000
-              AcceleratorTalk:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000
+            KAFKA_CREATE_TOPICS:
+              "Accelerator:1:1:compact --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000,\
+              AcceleratorCommand:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000,\
+              AcceleratorTalk:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
     phoebus-alarm-server:
