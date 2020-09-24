@@ -4,6 +4,8 @@ services:
         image: "wurstmeister/zookeeper:3.4.6"
         network_mode: "host"
         restart: "unless-stopped"
+        volumes:
+            - "./data/zookeeper/data:/opt/zookeeper-3.4.6/data"
     kafka:
         image: "wurstmeister/kafka:2.12-2.5.0"
         network_mode: "host"
@@ -11,6 +13,8 @@ services:
         depends_on:
             - "zookeeper"
         environment:
+            KAFKA_BROKER_ID: "1"
+            KAFKA_LOG_DIRS: "/logs"
             KAFKA_LISTENERS: "PLAINTEXT://:9092"
             KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://192.168.2.100:9092"
             KAFKA_ZOOKEEPER_CONNECT: "localhost:2181"
@@ -21,6 +25,7 @@ services:
               AcceleratorTalk:1:1:delete --config=segment.ms=10000 --config=min.cleanable.dirty.ratio=0.01 --config=min.compaction.lag.ms=1000 --config=retention.ms=20000 --config=delete.retention.ms=1000 --config=file.delete.delay.ms=1000"
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
+            - "./data/kafka/logs:/logs"
     phoebus-alarm-server:
         image: "pklaus/phoebus-alarm-server:4.6.3"
         command: "-noshell -server localhost:9092"
